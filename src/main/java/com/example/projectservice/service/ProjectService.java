@@ -1,5 +1,6 @@
 package com.example.projectservice.service;
 
+import com.example.projectservice.dto.mapper.MemberMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,11 +11,10 @@ import com.example.projectservice.entity.Project;
 import com.example.projectservice.exception.CustomException;
 import com.example.projectservice.exception.ErrorCode;
 import com.example.projectservice.repository.ProjectRepository;
-import com.example.projectservice.service.client.MemberServiceClient;
 
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProjectService {
 
 	private final ProjectRepository projectRepository;
-	private final MemberServiceClient memberServiceClient;
+	private final MemberMapper memberMapper;
 
 	/**
 	 * 프로젝트 생성
@@ -35,7 +35,7 @@ public class ProjectService {
 	 */
 	@Transactional
 	public ProjectResponse createProject(CreateProjectRequest request, Long memberId) {
-		MemberResponse memberResponse = getMemberById(memberId);
+		MemberResponse memberResponse = memberMapper.getMemberById(memberId);
 
 		Project project = projectRepository.save(request.toEntity(memberResponse));
 
@@ -44,16 +44,15 @@ public class ProjectService {
 		return ProjectResponse.from(project, memberId);
 	}
 
+	public Object findProjectById(Long id) {
+		return null;
+	}
 
-	private MemberResponse getMemberById(Long memberId) {
-		try{
-			return memberServiceClient.getMemberById(memberId).data();
-		} catch (FeignException.NotFound e){
-			log.error("FROM Member-Service : Member not found");
-			throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-		} catch (FeignException e){
-			log.error("FROM Member-Service : Member service error");
-			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-		}
+	public Object findProjects() {
+		return null;
+	}
+
+	public Object findMyProjects(Long memberId) {
+		return null;
 	}
 }

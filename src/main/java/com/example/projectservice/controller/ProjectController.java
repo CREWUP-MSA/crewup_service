@@ -33,22 +33,23 @@ public class ProjectController {
 		return ResponseEntity.ok(ApiResponse.success(projectService.createProject(request, memberId)));
 	}
 
-	@GetMapping("/project")
-	public ResponseEntity<ApiResponse<?>> getProject() {
+	@GetMapping("/project/{projectId}")
+	public ResponseEntity<ApiResponse<?>> getProject(@PathVariable("projectId") Long projectId) {
 		// TODO : 프로젝트 상세 조회
-		return null;
+		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectById(projectId)));
 	}
 
 	@GetMapping("/projects")
 	public ResponseEntity<ApiResponse<?>> getProjects() {
 		// TODO : 프로젝트 목록 조회
-		return null;
+		return ResponseEntity.ok(ApiResponse.success(projectService.findProjects()));
 	}
 
 	@GetMapping("/projects/my")
-	public ResponseEntity<ApiResponse<?>> getMyProjects() {
+	public ResponseEntity<ApiResponse<?>> getMyProjects(
+			@RequestHeader("X-Member-Id") Long memberId) {
 		// TODO : 내 프로젝트 목록 조회
-		return null;
+		return ResponseEntity.ok(ApiResponse.success(projectService.findMyProjects(memberId)));
 	}
 
 	@PatchMapping("/project/{projectId}")
