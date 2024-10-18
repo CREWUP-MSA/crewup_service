@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class ProfileLink extends BaseTimeEntity {
 	private LinkType linkType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@Column(name = "profile_id")
+	@JoinColumn(name = "profile_id")
 	private Profile profile;
 
 	//-- 연관관계 편의 메서드 --//
