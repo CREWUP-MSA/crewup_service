@@ -3,6 +3,8 @@ package com.example.projectservice.service;
 import java.util.List;
 
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
+import com.example.projectservice.dto.request.UpdateProjectRequest;
+import com.example.projectservice.entity.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +54,7 @@ public class ProjectService {
 	 * 프로젝트 상세 조회
 	 * @param id 조회할 프로젝트 ID
 	 * @return ProjectResponse
-	 * @throws CustomException 프로젝트를 찾을 수 없는 경우
-	 * @see ErrorCode
+	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 */
 	public ProjectResponse findProjectById(Long id) {
 		Project project = projectRepository.findById(id)
@@ -62,14 +63,25 @@ public class ProjectService {
 		return ProjectResponse.from(project);
 	}
 
-	// TODO : 프로젝트 목록 조회 (필터링)
-	public Object findProjectsByFilter(Filter filter, Position position) {
+	/**
+	 * 프로젝트 목록 조회
+	 * @param filter 필터
+	 *               - ALL: 전체 프로젝트 조회
+	 *               - RECRUITING: 모집 중인 프로젝트 조회
+	 *               - COMPLETED: 완료된 프로젝트 조회
+	 *               - NEED_POSITION: 필요한 포지션에 따라 프로젝트 조회
+	 * @param position 포지션 (필터가 NEED_POSITION 인 경우 필수)
+	 * @return List<ProjectResponse>
+	 */
+	public List<ProjectResponse> findProjectsByFilter(Filter filter, Position position) {
 		if (filter.equals(Filter.NEED_POSITION))
 			if (position == null)
 				throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
 
-
-		return null;
+		List<Project> projects = projectRepository.findProjectsByFilter(filter, position);
+		return projects.stream()
+			.map(ProjectResponse::from)
+			.toList();
 	}
 
 	/**
@@ -85,18 +97,70 @@ public class ProjectService {
 			.toList();
 	}
 
-	// TODO : 프로젝트 수정
-	public Object updateProject(Long projectId) {
-		return null;
+	/**
+	 * 프로젝트 수정 (리더만 수정 가능)
+	 * @param projectId 수정할 프로젝트 ID
+	 * @param memberId 수정 요청한 멤버 ID
+	 * @param request 수정할 프로젝트 정보
+	 * @return ProjectResponse
+	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
+	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
+	 */
+	@Transactional
+	public ProjectResponse updateProject(Long projectId, Long memberId, UpdateProjectRequest request) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+
+		checkIsLeader(project, memberId);
+
+		project.update(request);
+
+		return ProjectResponse.from(project);
 	}
 
-	// TODO : 프로젝트 완료
-	public Object completeProject(Long projectId) {
-		return null;
+	/**
+	 * 프로젝트 완료 (리더만 완료 가능)
+	 * checkIsLeader 메서드를 통해 프로젝트 리더인지 확인
+	 * @param projectId 완료할 프로젝트 ID
+	 * @param memberId 완료 요청한 멤버 ID
+	 * @return ProjectResponse
+	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
+	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
+	 */
+	@Transactional
+	public ProjectResponse completeProject(Long projectId, Long memberId) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+
+		checkIsLeader(project, memberId);
+
+		project.complete();
+		return ProjectResponse.from(project);
 	}
 
-	// TODO : 프로젝트 삭제
-	public Object deleteProject(Long projectId) {
-		return null;
+	/**
+	 * 프로젝트 삭제 (프로젝트 삭제 시 프로젝트 멤버도 함께 삭제, 리더만 삭제 가능)
+	 * checkIsLeader 메서드를 통해 프로젝트 리더인지 확인
+	 * @param projectId 삭제할 프로젝트 ID
+	 * @param memberId 삭제 요청한 멤버 ID
+	 * @return ProjectResponse
+	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
+	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
+	 */
+	@Transactional
+	public ProjectResponse deleteProject(Long projectId, Long memberId) {
+		Project project = projectRepository.findById(projectId)
+				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+
+		checkIsLeader(project, memberId);
+
+		projectRepository.delete(project);
+		return ProjectResponse.from(project);
+	}
+
+	private void checkIsLeader(Project project, Long memberId) {
+		 if (project.getMembers().stream()
+				.noneMatch(member -> member.getMemberId().equals(memberId) && member.getRole().equals(Role.LEADER)))
+			 throw new CustomException(ErrorCode.FORBIDDEN);
 	}
 }

@@ -2,6 +2,7 @@ package com.example.projectservice.entity;
 
 import java.util.List;
 
+import com.example.projectservice.dto.request.UpdateProjectRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -59,4 +60,15 @@ public class Project extends BaseTimeEntity {
 		this.members.add(member);
 		member.setProject(this);
 	}
+
+	public void update(UpdateProjectRequest request) {
+		this.title = request.title() != null ? request.title() : this.title;
+		this.content = request.content() != null ? request.content() : this.content;
+		this.needPositions = request.needPositions() != null ? request.needPositions() : this.needPositions;
+	}
+
+    public void complete() {
+		this.status = Status.COMPLETED;
+    }
+
 }

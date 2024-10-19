@@ -2,6 +2,7 @@ package com.example.projectservice.controller;
 
 import java.util.List;
 
+import com.example.projectservice.dto.request.UpdateProjectRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,7 @@ public class ProjectController {
 	}
 
 	@GetMapping("/projects")
-	public ResponseEntity<ApiResponse<?>> getProjects(
+	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getProjects(
 		@RequestParam("filter") Filter filter,
 		@RequestParam(value = "position", required = false) Position position) {
 
@@ -61,23 +62,27 @@ public class ProjectController {
 	}
 
 	@PatchMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<?>> updateProject(
-		@PathVariable("projectId") Long projectId) {
-		// TODO : 프로젝트 수정
-		return ResponseEntity.ok(ApiResponse.success(projectService.updateProject(projectId)));
+	public ResponseEntity<ApiResponse<ProjectResponse>> updateProject(
+		@PathVariable("projectId") Long projectId,
+		@RequestHeader("X-Member-Id") Long memberId,
+		@RequestBody UpdateProjectRequest request) {
+
+		return ResponseEntity.ok(ApiResponse.success(projectService.updateProject(projectId, memberId, request)));
 	}
 
 	@PatchMapping("/project/{projectId}/complete")
-	public ResponseEntity<ApiResponse<?>> completeProject(
-		@PathVariable("projectId") Long projectId) {
-		// TODO : 프로젝트 완료
-		return ResponseEntity.ok(ApiResponse.success(projectService.completeProject(projectId)));
+	public ResponseEntity<ApiResponse<ProjectResponse>> completeProject(
+		@PathVariable("projectId") Long projectId,
+		@RequestHeader("X-Member-Id") Long memberId) {
+
+		return ResponseEntity.ok(ApiResponse.success(projectService.completeProject(projectId, memberId)));
 	}
 
 	@DeleteMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<?>> deleteProject(
-		@PathVariable("projectId") Long projectId) {
-		// TODO : 프로젝트 삭제
-		return ResponseEntity.ok(ApiResponse.success(projectService.deleteProject(projectId)));
+	public ResponseEntity<ApiResponse<ProjectResponse>> deleteProject(
+		@PathVariable("projectId") Long projectId,
+		@RequestHeader("X-Member-Id") Long memberId) {
+
+		return ResponseEntity.ok(ApiResponse.success(projectService.deleteProject(projectId, memberId)));
 	}
 }
