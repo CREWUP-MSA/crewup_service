@@ -26,15 +26,37 @@ public class MemberClientMapper {
      */
     public MemberResponse getMemberById(Long id) {
         try{
-            return memberServiceClient.getMemberById(id).data();
-
-        } catch (FeignException.NotFound e){
-            log.error("FROM Member-Service : Member not found");
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            MemberResponse memberResponse = memberServiceClient.getMemberById(id).data();
+            validateMemberDeleted(memberResponse);
+            return memberResponse;
 
         } catch (FeignException e){
+            throw handleFeignException(e);
+        }
+    }
+
+    /**
+     * 회원 삭제 여부 확인
+     * @param memberResponse 회원 정보
+     * @throws CustomException 회원이 삭제된 경우
+     */
+    private void validateMemberDeleted(MemberResponse memberResponse) {
+        if (memberResponse.isDeleted())
+            throw new CustomException(ErrorCode.MEMBER_IS_DELETED);
+    }
+
+    /**
+     * FeignException 처리
+     * @param e FeignException
+     * @return CustomException (MEMBER_NOT_FOUND, INTERNAL_SERVER_ERROR)
+     */
+    private CustomException handleFeignException(FeignException e){
+        if(e instanceof FeignException.NotFound){
+            log.error("FROM Member-Service : Member not found");
+            return new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        } else {
             log.error("FROM Member-Service : Member service error");
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            return new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 }
