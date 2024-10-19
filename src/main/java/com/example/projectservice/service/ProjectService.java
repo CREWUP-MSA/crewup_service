@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.projectservice.dto.client.MemberResponse;
 import com.example.projectservice.dto.request.CreateProjectRequest;
 import com.example.projectservice.dto.request.Filter;
-import com.example.projectservice.dto.response.DetailProjectResponse;
 import com.example.projectservice.dto.response.ProjectResponse;
 import com.example.projectservice.entity.Position;
 import com.example.projectservice.entity.Project;
@@ -49,13 +48,18 @@ public class ProjectService {
 		return ProjectResponse.from(project);
 	}
 
-	// TODO : 프로젝트 상세 조회
-	public DetailProjectResponse findProjectById(Long id) {
+	/**
+	 * 프로젝트 상세 조회
+	 * @param id 조회할 프로젝트 ID
+	 * @return ProjectResponse
+	 * @throws CustomException 프로젝트를 찾을 수 없는 경우
+	 * @see ErrorCode
+	 */
+	public ProjectResponse findProjectById(Long id) {
 		Project project = projectRepository.findById(id)
 				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
-
-		return DetailProjectResponse.from(project);
+		return ProjectResponse.from(project);
 	}
 
 	// TODO : 프로젝트 목록 조회 (필터링)
@@ -79,5 +83,20 @@ public class ProjectService {
 		return projects.stream()
 			.map(ProjectResponse::from)
 			.toList();
+	}
+
+	// TODO : 프로젝트 수정
+	public Object updateProject(Long projectId) {
+		return null;
+	}
+
+	// TODO : 프로젝트 완료
+	public Object completeProject(Long projectId) {
+		return null;
+	}
+
+	// TODO : 프로젝트 삭제
+	public Object deleteProject(Long projectId) {
+		return null;
 	}
 }

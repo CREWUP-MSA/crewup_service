@@ -39,8 +39,9 @@ public class ProjectController {
 	}
 
 	@GetMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<?>> getProject(@PathVariable("projectId") Long projectId) {
-		// TODO : 프로젝트 상세 조회
+	public ResponseEntity<ApiResponse<ProjectResponse>> getProject(
+		@PathVariable("projectId") Long projectId) {
+
 		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectById(projectId)));
 	}
 
@@ -48,13 +49,13 @@ public class ProjectController {
 	public ResponseEntity<ApiResponse<?>> getProjects(
 		@RequestParam("filter") Filter filter,
 		@RequestParam(value = "position", required = false) Position position) {
-		// TODO : 프로젝트 목록 조회
+
 		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectsByFilter(filter, position)));
 	}
 
 	@GetMapping("/projects/my")
 	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getMyProjects(
-			@RequestHeader("X-Member-Id") Long memberId) {
+		@RequestHeader("X-Member-Id") Long memberId) {
 
 		return ResponseEntity.ok(ApiResponse.success(projectService.findMyProjects(memberId)));
 	}
@@ -63,13 +64,20 @@ public class ProjectController {
 	public ResponseEntity<ApiResponse<?>> updateProject(
 		@PathVariable("projectId") Long projectId) {
 		// TODO : 프로젝트 수정
-		return null;
+		return ResponseEntity.ok(ApiResponse.success(projectService.updateProject(projectId)));
+	}
+
+	@PatchMapping("/project/{projectId}/complete")
+	public ResponseEntity<ApiResponse<?>> completeProject(
+		@PathVariable("projectId") Long projectId) {
+		// TODO : 프로젝트 완료
+		return ResponseEntity.ok(ApiResponse.success(projectService.completeProject(projectId)));
 	}
 
 	@DeleteMapping("/project/{projectId}")
 	public ResponseEntity<ApiResponse<?>> deleteProject(
 		@PathVariable("projectId") Long projectId) {
 		// TODO : 프로젝트 삭제
-		return null;
+		return ResponseEntity.ok(ApiResponse.success(projectService.deleteProject(projectId)));
 	}
 }
