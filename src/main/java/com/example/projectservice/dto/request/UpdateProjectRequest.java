@@ -2,11 +2,11 @@ package com.example.projectservice.dto.request;
 
 import com.example.projectservice.entity.Position;
 
-import java.util.List;
+import java.util.Set;
 
 public record UpdateProjectRequest(
     String title,
     String content,
-    List<Position> needPositions
+    Set<Position> needPositions
 ) {
 }

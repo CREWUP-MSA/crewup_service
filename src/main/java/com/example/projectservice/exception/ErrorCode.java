@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE("잘못된 입력 값입니다.", 400),
 
     MEMBER_IS_DELETED("해당 회원은 탈퇴한 회원입니다.", 401),
+    ALREADY_COMPLETED_PROJECT("이미 완료된 프로젝트입니다.", 401),
 
     FORBIDDEN("권한이 없습니다.", 403),
 
