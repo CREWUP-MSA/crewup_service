@@ -1,8 +1,10 @@
 package com.example.projectservice.entity;
 
-import java.util.List;
+import java.util.*;
 
 import com.example.projectservice.dto.request.UpdateProjectRequest;
+import com.example.projectservice.exception.CustomException;
+import com.example.projectservice.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -47,10 +49,10 @@ public class Project extends BaseTimeEntity {
 	@CollectionTable(name = "project_need_positions", joinColumns = @JoinColumn(name = "project_id"))
 	@Column(name = "need_position")
 	@Enumerated(EnumType.STRING)
-	private List<Position> needPositions;
+	private Set<Position> needPositions = new HashSet<>();
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProjectMember> members;
+	private List<ProjectMember> members = new ArrayList<>();
 
 	/**
 	 * 프로젝트 멤버 추가
@@ -62,12 +64,15 @@ public class Project extends BaseTimeEntity {
 	}
 
 	public void update(UpdateProjectRequest request) {
-		this.title = request.title() != null ? request.title() : this.title;
-		this.content = request.content() != null ? request.content() : this.content;
-		this.needPositions = request.needPositions() != null ? request.needPositions() : this.needPositions;
+		this.title = Optional.ofNullable(request.title()).orElse(this.title);
+		this.content = Optional.ofNullable(request.content()).orElse(this.content);
+		this.needPositions = Optional.ofNullable(request.needPositions()).orElse(this.needPositions);
 	}
 
     public void complete() {
+		if (this.status == Status.COMPLETED) {
+			throw new CustomException(ErrorCode.ALREADY_COMPLETED_PROJECT);
+		}
 		this.status = Status.COMPLETED;
     }
 

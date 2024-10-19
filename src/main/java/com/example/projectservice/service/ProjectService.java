@@ -126,6 +126,7 @@ public class ProjectService {
 	 * @return ProjectResponse
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
+	 * @throws CustomException (ALREADY_COMPLETED_PROJECT) 이미 완료된 프로젝트인 경우
 	 */
 	@Transactional
 	public ProjectResponse completeProject(Long projectId, Long memberId) {

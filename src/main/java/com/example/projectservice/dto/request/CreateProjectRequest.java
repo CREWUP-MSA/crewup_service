@@ -1,6 +1,6 @@
 package com.example.projectservice.dto.request;
 
-import java.util.List;
+import java.util.Set;
 
 import com.example.projectservice.dto.client.MemberResponse;
 import com.example.projectservice.entity.Position;
@@ -24,7 +24,7 @@ public record CreateProjectRequest(
 
 	@NotEmpty(message = "프로젝트에 필요한 포지션을 입력해주세요.")
 	@Size(min = 1, message = "프로젝트에 필요한 포지션을 최소 1개 이상 입력해주세요.")
-	List<Position> needPositions
+	Set<Position> needPositions
 ) {
 
 	/**

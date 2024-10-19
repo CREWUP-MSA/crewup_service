@@ -6,14 +6,14 @@ import com.example.projectservice.entity.Status;
 
 import lombok.Builder;
 
-import java.util.List;
+import java.util.Set;
 
 @Builder
 public record ProjectResponse(
 	Long id,
 	String title,
 	String content,
-	List<Position> needPositions,
+	Set<Position> needPositions,
 	Status status
 ) {
 	public static ProjectResponse from(Project project) {
