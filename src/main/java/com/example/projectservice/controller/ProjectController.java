@@ -24,7 +24,7 @@ import com.example.projectservice.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/project-service/api")
+@RequestMapping("/crewup-service/api")
 @RequiredArgsConstructor
 public class ProjectController {
 
