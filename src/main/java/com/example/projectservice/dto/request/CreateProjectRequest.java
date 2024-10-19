@@ -3,10 +3,7 @@ package com.example.projectservice.dto.request;
 import java.util.Set;
 
 import com.example.projectservice.dto.client.MemberResponse;
-import com.example.projectservice.entity.Position;
-import com.example.projectservice.entity.Project;
-import com.example.projectservice.entity.ProjectMember;
-import com.example.projectservice.entity.Role;
+import com.example.projectservice.entity.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -43,6 +40,7 @@ public record CreateProjectRequest(
 			.title(title)
 			.content(content)
 			.needPositions(needPositions)
+			.status(Status.RECRUITING)
 			.build();
 
 		project.addMember(member);
