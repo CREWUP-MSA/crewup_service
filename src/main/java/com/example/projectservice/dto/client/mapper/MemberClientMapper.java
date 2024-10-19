@@ -1,4 +1,4 @@
-package com.example.projectservice.dto.mapper;
+package com.example.projectservice.dto.client.mapper;
 
 import com.example.projectservice.dto.client.MemberResponse;
 import com.example.projectservice.exception.CustomException;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class MemberMapper {
+public class MemberClientMapper {
 
     private final MemberServiceClient memberServiceClient;
 

@@ -1,5 +1,7 @@
 package com.example.projectservice.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.projectservice.dto.ApiResponse;
 import com.example.projectservice.dto.request.CreateProjectRequest;
+import com.example.projectservice.dto.request.Filter;
 import com.example.projectservice.dto.response.ProjectResponse;
+import com.example.projectservice.entity.Position;
 import com.example.projectservice.service.ProjectService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,15 +45,17 @@ public class ProjectController {
 	}
 
 	@GetMapping("/projects")
-	public ResponseEntity<ApiResponse<?>> getProjects() {
+	public ResponseEntity<ApiResponse<?>> getProjects(
+		@RequestParam("filter") Filter filter,
+		@RequestParam(value = "position", required = false) Position position) {
 		// TODO : 프로젝트 목록 조회
-		return ResponseEntity.ok(ApiResponse.success(projectService.findProjects()));
+		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectsByFilter(filter, position)));
 	}
 
 	@GetMapping("/projects/my")
-	public ResponseEntity<ApiResponse<?>> getMyProjects(
+	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getMyProjects(
 			@RequestHeader("X-Member-Id") Long memberId) {
-		// TODO : 내 프로젝트 목록 조회
+
 		return ResponseEntity.ok(ApiResponse.success(projectService.findMyProjects(memberId)));
 	}
 

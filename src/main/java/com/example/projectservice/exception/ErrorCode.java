@@ -5,6 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    INVALID_INPUT_VALUE("잘못된 입력 값입니다.", 400),
+
     MEMBER_IS_DELETED("해당 회원은 탈퇴한 회원입니다.", 401),
 
     MEMBER_NOT_FOUND("해당 회원을 찾을 수 없습니다.", 404),

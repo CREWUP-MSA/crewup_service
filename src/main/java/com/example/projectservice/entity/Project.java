@@ -38,6 +38,10 @@ public class Project extends BaseTimeEntity {
 	@Column(name = "project_content", nullable = false)
 	private String content;
 
+	@Column(name = "project_status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
 	@ElementCollection(targetClass = Position.class)
 	@CollectionTable(name = "project_need_positions", joinColumns = @JoinColumn(name = "project_id"))
 	@Column(name = "need_position")
