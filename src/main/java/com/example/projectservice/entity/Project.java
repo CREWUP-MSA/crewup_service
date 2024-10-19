@@ -52,6 +52,7 @@ public class Project extends BaseTimeEntity {
 	private Set<Position> needPositions = new HashSet<>();
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
 	private List<ProjectMember> members = new ArrayList<>();
 
 	/**
