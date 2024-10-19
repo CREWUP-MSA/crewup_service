@@ -1,5 +1,6 @@
 package com.example.projectservice.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -39,7 +40,8 @@ public class Profile extends BaseTimeEntity {
 	private String introduction;
 
 	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ProfileLink> links;
+	@Builder.Default
+	private List<ProfileLink> links = new ArrayList<>();
 
 	public void addLink(ProfileLink link) {
 		this.links.add(link);
