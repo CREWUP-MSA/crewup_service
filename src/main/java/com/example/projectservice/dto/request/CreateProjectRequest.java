@@ -9,18 +9,21 @@ import com.example.projectservice.entity.ProjectMember;
 import com.example.projectservice.entity.Role;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public record CreateProjectRequest(
-	@NotBlank
+	@NotBlank(message = "프로젝트 제목을 입력해주세요.")
 	String title,
 
-	@NotBlank
+	@NotBlank(message = "프로젝트 내용을 입력해주세요.")
 	String content,
 
-	@NotBlank
+	@NotBlank(message = "프로젝트 내 포지션을 입력해주세요.")
 	Position myPosition,
 
-	@NotBlank
+	@NotEmpty(message = "프로젝트에 필요한 포지션을 입력해주세요.")
+	@Size(min = 1, message = "프로젝트에 필요한 포지션을 최소 1개 이상 입력해주세요.")
 	List<Position> needPositions
 ) {
 
