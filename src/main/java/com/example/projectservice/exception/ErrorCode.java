@@ -9,6 +9,9 @@ public enum ErrorCode {
 
     MEMBER_IS_DELETED("해당 회원은 탈퇴한 회원입니다.", 401),
     ALREADY_COMPLETED_PROJECT("이미 완료된 프로젝트입니다.", 401),
+    MEMBER_ALREADY_EXISTS("이미 존재하는 회원입니다.", 401),
+    ALREADY_LEADER("이미 리더인 회원입니다.", 401),
+    CANNOT_DELETE_LEADER("리더는 삭제할 수 없습니다. 프로젝트를 삭제해주세요", 401),
 
     FORBIDDEN("권한이 없습니다.", 403),
 

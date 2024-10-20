@@ -1,5 +1,7 @@
 package com.example.projectservice.entity;
 
+import com.example.projectservice.dto.request.UpdateMemberToProject;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,5 +47,22 @@ public class ProjectMember extends BaseTimeEntity {
 	//-- 연관관계 편의 메서드 --//
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	/**
+	 * 프로젝트 멤버 수정
+	 * @param request 수정할 프로젝트 멤버 정보
+	 */
+	public void update(UpdateMemberToProject request) {
+		this.position = request.position();
+	}
+
+	/**
+	 * 리더 변경
+	 * @param member 리더로 변경할 멤버
+	 */
+	public void updateLeader(ProjectMember member) {
+		this.role = Role.MEMBER;
+		member.role = Role.LEADER;
 	}
 }
