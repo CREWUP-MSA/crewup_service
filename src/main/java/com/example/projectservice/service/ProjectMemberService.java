@@ -10,10 +10,12 @@ import com.example.projectservice.dto.client.mapper.MemberClientMapper;
 import com.example.projectservice.dto.request.AddMemberToProjectRequest;
 import com.example.projectservice.dto.request.UpdateMemberToProject;
 import com.example.projectservice.dto.response.ProjectMemberResponse;
+import com.example.projectservice.entity.Profile;
 import com.example.projectservice.entity.Project;
 import com.example.projectservice.entity.ProjectMember;
 import com.example.projectservice.exception.CustomException;
 import com.example.projectservice.exception.ErrorCode;
+import com.example.projectservice.repository.ProfileRepository;
 import com.example.projectservice.repository.ProjectMemberRepository;
 import com.example.projectservice.repository.ProjectRepository;
 
@@ -28,6 +30,7 @@ public class ProjectMemberService {
 
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
+	private final ProfileRepository profileRepository;
 	private final MemberClientMapper memberClientMapper;
 
 	/**
@@ -52,7 +55,8 @@ public class ProjectMemberService {
 		project.addMember(projectMember);
 
 		projectMemberRepository.save(projectMember);
-		return ProjectMemberResponse.from(projectMember);
+		Profile profile = findProfileByMemberId(memberId);
+		return ProjectMemberResponse.from(projectMember, profile.getNickname());
 	}
 
 	/**
@@ -70,7 +74,10 @@ public class ProjectMemberService {
 			throw new CustomException(ErrorCode.FORBIDDEN);
 
 		return project.getMembers().stream()
-			.map(ProjectMemberResponse::from)
+			.map(projectMember -> {
+				Profile profile = findProfileByMemberId(projectMember.getMemberId());
+				return ProjectMemberResponse.from(projectMember, profile.getNickname());
+			})
 			.toList();
 	}
 
@@ -93,7 +100,8 @@ public class ProjectMemberService {
 		ProjectMember projectMember = findProjectMember(projectId, memberId);
 
 		projectMember.update(request);
-		return ProjectMemberResponse.from(projectMember);
+		Profile profile = findProfileByMemberId(memberId);
+		return ProjectMemberResponse.from(projectMember, profile.getNickname());
 	}
 
 	/**
@@ -119,7 +127,8 @@ public class ProjectMemberService {
 		ProjectMember member = findProjectMember(projectId, memberId);
 
 		leader.updateLeader(member);
-		return ProjectMemberResponse.from(member);
+		Profile profile = findProfileByMemberId(memberId);
+		return ProjectMemberResponse.from(member, profile.getNickname());
 	}
 
 	/**
@@ -145,7 +154,8 @@ public class ProjectMemberService {
 
 		project.getMembers().remove(projectMember);
 		projectMemberRepository.delete(projectMember);
-		return ProjectMemberResponse.from(projectMember);
+		Profile profile = findProfileByMemberId(memberId);
+		return ProjectMemberResponse.from(projectMember, profile.getNickname());
 	}
 
 	private Project findProjectById(Long projectId) {
@@ -156,6 +166,11 @@ public class ProjectMemberService {
 	private ProjectMember findProjectMember(Long projectId, Long memberId) {
 		return projectMemberRepository.findByProjectIdAndMemberId(projectId, memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	}
+
+	private Profile findProfileByMemberId(Long memberId) {
+		return profileRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.PROFILE_NOT_FOUND));
 	}
 
 	private void validateLeader(Long requesterId, Project project) {
