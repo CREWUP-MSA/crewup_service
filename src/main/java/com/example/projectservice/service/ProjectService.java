@@ -111,7 +111,7 @@ public class ProjectService {
 		Project project = projectRepository.findById(projectId)
 				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
-		checkIsLeader(project, memberId);
+		validateLeader(project, memberId);
 
 		project.update(request);
 
@@ -120,7 +120,6 @@ public class ProjectService {
 
 	/**
 	 * 프로젝트 완료 (리더만 완료 가능)
-	 * checkIsLeader 메서드를 통해 프로젝트 리더인지 확인
 	 * @param projectId 완료할 프로젝트 ID
 	 * @param memberId 완료 요청한 멤버 ID
 	 * @return ProjectResponse
@@ -133,7 +132,7 @@ public class ProjectService {
 		Project project = projectRepository.findById(projectId)
 				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
-		checkIsLeader(project, memberId);
+		validateLeader(project, memberId);
 
 		project.complete();
 		return ProjectResponse.from(project);
@@ -141,7 +140,6 @@ public class ProjectService {
 
 	/**
 	 * 프로젝트 삭제 (프로젝트 삭제 시 프로젝트 멤버도 함께 삭제, 리더만 삭제 가능)
-	 * checkIsLeader 메서드를 통해 프로젝트 리더인지 확인
 	 * @param projectId 삭제할 프로젝트 ID
 	 * @param memberId 삭제 요청한 멤버 ID
 	 * @return ProjectResponse
@@ -153,15 +151,14 @@ public class ProjectService {
 		Project project = projectRepository.findById(projectId)
 				.orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
-		checkIsLeader(project, memberId);
+		validateLeader(project, memberId);
 
 		projectRepository.delete(project);
 		return ProjectResponse.from(project);
 	}
 
-	private void checkIsLeader(Project project, Long memberId) {
-		 if (project.getMembers().stream()
-				.noneMatch(member -> member.getMemberId().equals(memberId) && member.getRole().equals(Role.LEADER)))
+	private void validateLeader(Project project, Long memberId) {
+		 if (!project.isLeader(memberId))
 			 throw new CustomException(ErrorCode.FORBIDDEN);
 	}
 }
