@@ -64,12 +64,20 @@ public class Project extends BaseTimeEntity {
 		member.setProject(this);
 	}
 
+	/**
+	 * 프로젝트 정보 수정
+	 * @param request 수정할 프로젝트 정보
+	 */
 	public void update(UpdateProjectRequest request) {
 		this.title = Optional.ofNullable(request.title()).orElse(this.title);
 		this.content = Optional.ofNullable(request.content()).orElse(this.content);
 		this.needPositions = Optional.ofNullable(request.needPositions()).orElse(this.needPositions);
 	}
 
+	/**
+	 * 프로젝트 완료 처리
+	 * @throws CustomException 이미 완료된 프로젝트일 경우
+	 */
     public void complete() {
 		if (this.status == Status.COMPLETED) {
 			throw new CustomException(ErrorCode.ALREADY_COMPLETED_PROJECT);
@@ -77,4 +85,18 @@ public class Project extends BaseTimeEntity {
 		this.status = Status.COMPLETED;
     }
 
+	public boolean isLeader(Long requesterId) {
+		return this.members.stream()
+			.anyMatch(member -> member.getMemberId().equals(requesterId) && member.getRole().equals(Role.LEADER));
+	}
+
+	/**
+	 * 프로젝트 멤버 여부 확인
+	 * @param requesterId 요청자 ID
+	 * @return 프로젝트 멤버 여부
+	 */
+	public boolean isMember(Long requesterId) {
+		return this.members.stream()
+			.anyMatch(member -> member.getMemberId().equals(requesterId));
+	}
 }

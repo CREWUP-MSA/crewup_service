@@ -17,7 +17,7 @@ public class MemberClientMapper {
     private final MemberServiceClient memberServiceClient;
 
     /**
-     * 멤버 조회 - By ID Mapper
+     * 멤버 조회 - By ID
      * @param id 멤버 ID
      * @return MemberResponse
      * @throws CustomException 멤버를 찾을 수 없는 경우
