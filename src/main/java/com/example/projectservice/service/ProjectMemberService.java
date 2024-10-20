@@ -41,11 +41,12 @@ public class ProjectMemberService {
 	 * @return ProjectMemberResponse
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (MEMBER_ALREADY_EXISTS) 이미 프로젝트 멤버인 경우
+	 * @throws CustomException (MEMBER_NOT_FOUND) 멤버를 찾을 수 없는 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	@Transactional
 	public ProjectMemberResponse createMemberToProject(Long projectId, Long memberId, AddMemberToProjectRequest request) {
 		Project project = findProjectById(projectId);
-
 		MemberResponse memberResponse = memberClientMapper.getMemberById(memberId);
 
 		if (projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId))
@@ -66,6 +67,7 @@ public class ProjectMemberService {
 	 * @return List<ProjectMemberResponse>
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (FORBIDDEN) 요청자가 프로젝트 멤버가 아닌 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	public List<ProjectMemberResponse> getMembersOfProject(Long projectId, Long requesterId) {
 		Project project = findProjectById(projectId);
@@ -91,6 +93,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (FORBIDDEN) 요청자가 프로젝트 리더, 본인이 아닌 경우
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	@Transactional
 	public ProjectMemberResponse updateMemberInProject(Long projectId, Long requesterId, Long memberId, UpdateMemberToProject request) {
@@ -114,6 +117,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (FORBIDDEN) 요청자가 프로젝트 리더가 아닌 경우
 	 * @throws CustomException (ALREADY_LEADER) 이미 리더인 경우
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	@Transactional
 	public ProjectMemberResponse updateLeaderOfProject(Long projectId, Long requesterId, Long memberId) {
@@ -141,6 +145,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (FORBIDDEN) 요청자가 프로젝트 리더, 본인이 아닌 경우
 	 * @throws CustomException (CANNOT_DELETE_LEADER) 리더인 경우
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	@Transactional
 	public ProjectMemberResponse deleteMemberOfProject(Long projectId, Long requesterId, Long memberId) {
