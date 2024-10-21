@@ -2,6 +2,9 @@ package com.example.projectservice.controller;
 
 import java.util.List;
 
+import com.example.projectservice.config.swagger.AlreadyCompleteApiResponse;
+import com.example.projectservice.config.swagger.ForbiddenApiResponse;
+import com.example.projectservice.config.swagger.ProjectNotFoundApiResponse;
 import com.example.projectservice.dto.request.UpdateProjectRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,74 +18,93 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.projectservice.dto.ApiResponse;
+import com.example.projectservice.dto.CustomApiResponse;
 import com.example.projectservice.dto.request.CreateProjectRequest;
 import com.example.projectservice.dto.request.Filter;
 import com.example.projectservice.dto.response.ProjectResponse;
 import com.example.projectservice.entity.Position;
 import com.example.projectservice.service.ProjectService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/crewup-service/api")
 @RequiredArgsConstructor
+@Tag(name = "프로젝트 API", description = "프로젝트 모집관련 API")
 public class ProjectController {
 
 	private final ProjectService projectService;
 
 	@PostMapping("/project")
-	public ResponseEntity<ApiResponse<ProjectResponse>> createProject(
+	@Operation(summary = "프로젝트 모집 생성", description = "프로젝트 모집을 생성합니다.")
+	@ProjectNotFoundApiResponse
+	public ResponseEntity<CustomApiResponse<ProjectResponse>> createProject(
 		@RequestBody CreateProjectRequest request,
 		@RequestHeader("X-Member-Id") Long memberId) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.createProject(request, memberId)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.createProject(request, memberId)));
 	}
 
 	@GetMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<ProjectResponse>> getProject(
+	@Operation(summary = "프로젝트 모집 조회", description = "프로젝트 모집을 조회합니다.")
+	@ProjectNotFoundApiResponse
+	public ResponseEntity<CustomApiResponse<ProjectResponse>> getProject(
 		@PathVariable("projectId") Long projectId) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectById(projectId)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.findProjectById(projectId)));
 	}
 
 	@GetMapping("/projects")
-	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getProjectsByFilter(
+	@Operation(summary = "프로젝트 모집 목록 조회", description = "프로젝트 모집 목록을 조회합니다.")
+	public ResponseEntity<CustomApiResponse<List<ProjectResponse>>> getProjectsByFilter(
 		@RequestParam("filter") Filter filter,
 		@RequestParam(value = "position", required = false) Position position) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.findProjectsByFilter(filter, position)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.findProjectsByFilter(filter, position)));
 	}
 
 	@GetMapping("/projects/my")
-	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getMyProjects(
+	@Operation(summary = "내 프로젝트 모집 목록 조회", description = "내 프로젝트 모집 목록을 조회합니다.")
+	public ResponseEntity<CustomApiResponse<List<ProjectResponse>>> getMyProjects(
 		@RequestHeader("X-Member-Id") Long memberId) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.findMyProjects(memberId)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.findMyProjects(memberId)));
 	}
 
 	@PatchMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<ProjectResponse>> updateProject(
+	@Operation(summary = "프로젝트 모집 수정", description = "프로젝트 모집을 수정합니다.")
+	@ProjectNotFoundApiResponse
+	@ForbiddenApiResponse
+	public ResponseEntity<CustomApiResponse<ProjectResponse>> updateProject(
 		@PathVariable("projectId") Long projectId,
 		@RequestHeader("X-Member-Id") Long memberId,
 		@RequestBody UpdateProjectRequest request) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.updateProject(projectId, memberId, request)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.updateProject(projectId, memberId, request)));
 	}
 
 	@PatchMapping("/project/{projectId}/complete")
-	public ResponseEntity<ApiResponse<ProjectResponse>> completeProject(
+	@Operation(summary = "프로젝트 모집 완료", description = "프로젝트 모집을 완료합니다.")
+	@ProjectNotFoundApiResponse
+	@ForbiddenApiResponse
+	@AlreadyCompleteApiResponse
+	public ResponseEntity<CustomApiResponse<ProjectResponse>> completeProject(
 		@PathVariable("projectId") Long projectId,
 		@RequestHeader("X-Member-Id") Long memberId) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.completeProject(projectId, memberId)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.completeProject(projectId, memberId)));
 	}
 
 	@DeleteMapping("/project/{projectId}")
-	public ResponseEntity<ApiResponse<ProjectResponse>> deleteProject(
+	@Operation(summary = "프로젝트 모집 삭제", description = "프로젝트 모집을 삭제합니다.")
+	@ProjectNotFoundApiResponse
+	@ForbiddenApiResponse
+	public ResponseEntity<CustomApiResponse<ProjectResponse>> deleteProject(
 		@PathVariable("projectId") Long projectId,
 		@RequestHeader("X-Member-Id") Long memberId) {
 
-		return ResponseEntity.ok(ApiResponse.success(projectService.deleteProject(projectId, memberId)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.deleteProject(projectId, memberId)));
 	}
 }
