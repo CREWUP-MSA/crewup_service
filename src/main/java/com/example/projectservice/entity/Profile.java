@@ -2,6 +2,9 @@ package com.example.projectservice.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import com.example.projectservice.dto.request.UpdateProfileRequest;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,5 +49,21 @@ public class Profile extends BaseTimeEntity {
 	public void addLink(ProfileLink link) {
 		this.links.add(link);
 		link.setProfile(this);
+	}
+
+	public void update(UpdateProfileRequest request) {
+		this.nickname = Optional.ofNullable(request.nickname()).orElse(this.nickname);
+		this.introduction = Optional.ofNullable(request.introduction()).orElse(this.introduction);
+
+		if (!request.links().isEmpty()){
+			this.links.clear();
+			request.links().forEach(link -> {
+				addLink(ProfileLink.builder()
+					.url(link.url())
+					.linkType(link.linkType())
+					.build());
+			});
+		}
+
 	}
 }
