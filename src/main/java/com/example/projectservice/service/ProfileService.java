@@ -28,8 +28,7 @@ public class ProfileService {
 	 * @throws CustomException 프로필이 존재하지 않을 경우
 	 */
 	public ProfileResponse findProfileByMemberId(Long memberId) {
-		Profile profile = profileRepository.findByMemberId(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.PROFILE_NOT_FOUND));
+		Profile profile = findProfile(memberId);
 
 		return ProfileResponse.from(profile);
 	}
@@ -41,8 +40,7 @@ public class ProfileService {
 	 * @throws CustomException 프로필이 존재하지 않을 경우
 	 */
 	public ProfileResponse findMyProfile(Long memberId) {
-		Profile profile = profileRepository.findByMemberId(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.PROFILE_NOT_FOUND));
+		Profile profile = findProfile(memberId);
 
 		return ProfileResponse.from(profile);
 	}
@@ -56,10 +54,14 @@ public class ProfileService {
 	 */
 	@Transactional
 	public ProfileResponse updateProfile(UpdateProfileRequest request, Long memberId) {
-		Profile profile = profileRepository.findByMemberId(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.PROFILE_NOT_FOUND));
+		Profile profile = findProfile(memberId);
 
 		profile.update(request);
 		return ProfileResponse.from(profile);
+	}
+
+	private Profile findProfile(Long memberId) {
+		return profileRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.PROFILE_NOT_FOUND));
 	}
 }

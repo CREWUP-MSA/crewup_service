@@ -47,7 +47,7 @@ public class ProjectController {
 	}
 
 	@GetMapping("/projects")
-	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getProjects(
+	public ResponseEntity<ApiResponse<List<ProjectResponse>>> getProjectsByFilter(
 		@RequestParam("filter") Filter filter,
 		@RequestParam(value = "position", required = false) Position position) {
 
