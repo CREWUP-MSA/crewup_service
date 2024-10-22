@@ -3,6 +3,7 @@ package com.example.projectservice.service;
 import java.util.List;
 
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
+import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.UpdateProjectRequest;
 import com.example.projectservice.entity.Role;
 import org.springframework.stereotype.Service;
@@ -73,12 +74,12 @@ public class ProjectService {
 	 * @param position 포지션 (필터가 NEED_POSITION 인 경우 필수)
 	 * @return List<ProjectResponse>
 	 */
-	public List<ProjectResponse> findProjectsByFilter(Filter filter, Position position) {
+	public List<ProjectResponse> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter) {
 		if (filter.equals(Filter.NEED_POSITION))
 			if (position == null)
 				throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
 
-		List<Project> projects = projectRepository.findProjectsByFilter(filter, position);
+		List<Project> projects = projectRepository.findProjectsByFilter(filter, position, categoryFilter);
 		return projects.stream()
 			.map(ProjectResponse::from)
 			.toList();
