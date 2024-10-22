@@ -49,12 +49,14 @@ public class Project extends BaseTimeEntity {
 	@CollectionTable(name = "project_need_positions", joinColumns = @JoinColumn(name = "project_id"))
 	@Column(name = "need_position")
 	@Enumerated(EnumType.STRING)
+	@Builder.Default
 	private Set<Position> needPositions = new HashSet<>();
 
 	@ElementCollection(targetClass = Category.class)
 	@CollectionTable(name = "project_categories", joinColumns = @JoinColumn(name = "project_id"))
 	@Column(name = "category")
 	@Enumerated(EnumType.STRING)
+	@Builder.Default
 	private Set<Category> categories = new HashSet<>();
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)

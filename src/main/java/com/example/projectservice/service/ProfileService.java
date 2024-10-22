@@ -28,7 +28,7 @@ public class ProfileService {
 	 *
 	 * nickname: "USER" + memberId ( 기본 닉네임 )
 	 */
-	@KafkaListener(topics = "member-create", groupId = "project-service-group", containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = "member-create", groupId = "crewup-service-group", containerFactory = "kafkaListenerContainerFactory")
 	@Transactional
 	public void CreateProfile(Long memberId){
 		Profile profile = Profile.builder()
