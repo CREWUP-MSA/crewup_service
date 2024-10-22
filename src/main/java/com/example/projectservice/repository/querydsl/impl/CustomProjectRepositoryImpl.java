@@ -39,6 +39,7 @@ public class CustomProjectRepositoryImpl implements CustomProjectRepository {
 	 * 프로젝트 필터링 조회
 	 * @param filter 필터
 	 * @param position 포지션
+	 * @param categoryFilter 카테고리 필터
 	 * @return List<Project>
 	 */
 	public List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter) {
