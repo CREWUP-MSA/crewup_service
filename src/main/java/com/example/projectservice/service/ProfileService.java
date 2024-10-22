@@ -25,7 +25,7 @@ public class ProfileService {
 	 * 프로필 조회
 	 * @param memberId 조회할 회원 ID
 	 * @return ProfileResponse
-	 * @throws CustomException 프로필이 존재하지 않을 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필이 존재하지 않을 경우
 	 */
 	public ProfileResponse findProfileByMemberId(Long memberId) {
 		Profile profile = findProfile(memberId);
@@ -37,7 +37,7 @@ public class ProfileService {
 	 * 내 프로필 조회
 	 * @param memberId 내 회원 ID
 	 * @return ProfileResponse
-	 * @throws CustomException 프로필이 존재하지 않을 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필이 존재하지 않을 경우
 	 */
 	public ProfileResponse findMyProfile(Long memberId) {
 		Profile profile = findProfile(memberId);
@@ -50,7 +50,7 @@ public class ProfileService {
 	 * @param request 수정할 프로필 정보
 	 * @param memberId 수정할 회원 ID
 	 * @return ProfileResponse
-	 * @throws CustomException 프로필이 존재하지 않을 경우
+	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필이 존재하지 않을 경우
 	 */
 	@Transactional
 	public ProfileResponse updateProfile(UpdateProfileRequest request, Long memberId) {
