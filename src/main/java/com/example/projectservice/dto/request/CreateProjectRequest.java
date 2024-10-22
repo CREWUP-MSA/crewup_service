@@ -21,7 +21,11 @@ public record CreateProjectRequest(
 
 	@NotEmpty(message = "프로젝트에 필요한 포지션을 입력해주세요.")
 	@Size(min = 1, message = "프로젝트에 필요한 포지션을 최소 1개 이상 입력해주세요.")
-	Set<Position> needPositions
+	Set<Position> needPositions,
+
+	@NotEmpty(message = "프로젝트 카테고리를 입력해주세요.")
+	@Size(min = 1, message = "프로젝트 카테고리를 최소 1개 이상 입력해주세요.")
+	Set<Category> categories
 ) {
 
 	/**
@@ -40,6 +44,7 @@ public record CreateProjectRequest(
 			.title(title)
 			.content(content)
 			.needPositions(needPositions)
+			.categories(categories)
 			.status(Status.RECRUITING)
 			.build();
 

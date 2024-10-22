@@ -51,6 +51,12 @@ public class Project extends BaseTimeEntity {
 	@Enumerated(EnumType.STRING)
 	private Set<Position> needPositions = new HashSet<>();
 
+	@ElementCollection(targetClass = Category.class)
+	@CollectionTable(name = "project_categories", joinColumns = @JoinColumn(name = "project_id"))
+	@Column(name = "category")
+	@Enumerated(EnumType.STRING)
+	private Set<Category> categories = new HashSet<>();
+
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private List<ProjectMember> members = new ArrayList<>();
@@ -72,6 +78,7 @@ public class Project extends BaseTimeEntity {
 		this.title = Optional.ofNullable(request.title()).orElse(this.title);
 		this.content = Optional.ofNullable(request.content()).orElse(this.content);
 		this.needPositions = Optional.ofNullable(request.needPositions()).orElse(this.needPositions);
+		this.categories = Optional.ofNullable(request.categories()).orElse(this.categories);
 	}
 
 	/**
