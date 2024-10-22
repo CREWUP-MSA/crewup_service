@@ -1,5 +1,6 @@
 package com.example.projectservice.service;
 
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,25 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileService {
 
 	private final ProfileRepository profileRepository;
+
+	/**
+	 * 프로필 생성 - Kafka 이벤트 수신하여 회원가입시 자동 생성
+	 * @param memberId 생성할 프로필의 회원 ID
+	 *
+	 * nickname: "USER" + memberId ( 기본 닉네임 )
+	 */
+	@KafkaListener(topics = "member-create", groupId = "project-service-group", containerFactory = "kafkaListenerContainerFactory")
+	@Transactional
+	public void CreateProfile(Long memberId){
+		Profile profile = Profile.builder()
+			.memberId(memberId)
+			.nickname("USER" + memberId)
+			.introduction("자기소개를 작성해주세요.")
+			.build();
+
+		profileRepository.save(profile);
+		log.info("profile created: {}", profile);
+	}
 
 	/**
 	 * 프로필 조회
