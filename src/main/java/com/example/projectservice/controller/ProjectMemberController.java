@@ -28,6 +28,7 @@ import com.example.projectservice.service.ProjectMemberService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -47,7 +48,7 @@ public class ProjectMemberController {
 	public ResponseEntity<CustomApiResponse<ProjectMemberResponse>> createMemberToProject(
 		@RequestHeader("X-Member-Id") Long requesterId,
 		@PathVariable Long projectId,
-		@RequestBody AddMemberToProjectRequest request) {
+		@RequestBody @Valid AddMemberToProjectRequest request) {
 
 		return ResponseEntity.ok(
 			CustomApiResponse.success(projectMemberService.createMemberToProject(projectId, requesterId, request)));
@@ -76,7 +77,7 @@ public class ProjectMemberController {
 		@RequestHeader("X-Member-Id") Long requesterId,
 		@PathVariable Long projectId,
 		@PathVariable Long memberId,
-		@RequestBody UpdateMemberToProject request) {
+		@RequestBody @Valid UpdateMemberToProject request) {
 
 		return ResponseEntity.ok(
 			CustomApiResponse.success(projectMemberService.updateMemberInProject(projectId, requesterId, memberId, request)));
