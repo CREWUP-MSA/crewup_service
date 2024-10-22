@@ -18,4 +18,8 @@ public record CustomApiResponse<T>(
     public static <T> CustomApiResponse<T> fail(String message) {
         return new CustomApiResponse<>(message, null);
     }
+
+    public static <T> CustomApiResponse<T> fail(T data) {
+        return new CustomApiResponse<>(null, data);
+    }
 }

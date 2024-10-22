@@ -27,6 +27,7 @@ import com.example.projectservice.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,7 +42,7 @@ public class ProjectController {
 	@Operation(summary = "프로젝트 모집 생성", description = "프로젝트 모집을 생성합니다.")
 	@ProjectNotFoundApiResponse
 	public ResponseEntity<CustomApiResponse<ProjectResponse>> createProject(
-		@RequestBody CreateProjectRequest request,
+		@RequestBody @Valid CreateProjectRequest request,
 		@RequestHeader("X-Member-Id") Long memberId) {
 
 		return ResponseEntity.ok(CustomApiResponse.success(projectService.createProject(request, memberId)));
