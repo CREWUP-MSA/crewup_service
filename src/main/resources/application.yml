@@ -10,3 +10,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+      
+springdoc:
+  swagger-ui:
+    path: /crewup-service/swagger-ui/index.html
