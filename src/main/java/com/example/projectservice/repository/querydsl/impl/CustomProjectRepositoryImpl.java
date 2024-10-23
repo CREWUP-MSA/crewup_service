@@ -2,6 +2,7 @@ package com.example.projectservice.repository.querydsl.impl;
 
 import java.util.List;
 
+import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.Filter;
 import com.example.projectservice.entity.*;
 import com.querydsl.core.BooleanBuilder;
@@ -38,29 +39,31 @@ public class CustomProjectRepositoryImpl implements CustomProjectRepository {
 	 * 프로젝트 필터링 조회
 	 * @param filter 필터
 	 * @param position 포지션
+	 * @param categoryFilter 카테고리 필터
 	 * @return List<Project>
 	 */
-	public List<Project> findProjectsByFilter(Filter filter, Position position) {
+	public List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter) {
 		QProject project = QProject.project;
 		BooleanBuilder builder = new BooleanBuilder();
 
-		switch (filter) {
-			case ALL:
-				break;
-			case RECRUITING:
-				builder.and(project.status.eq(Status.RECRUITING));
-				break;
-			case COMPLETED:
-				builder.and(project.status.eq(Status.COMPLETED));
-				break;
-			case NEED_POSITION:
-				builder.and(project.needPositions.contains(position));
+		if (filter != Filter.ALL) {
+			switch (filter) {
+				case RECRUITING:
+				case COMPLETED:
+					builder.and(project.status.eq(Status.valueOf(filter.name())));
+					break;
+				case NEED_POSITION:
+					builder.and(project.needPositions.contains(position));
+			}
 		}
+
+		if (categoryFilter != CategoryFilter.ALL)
+			builder.and(project.categories.contains(Category.valueOf(categoryFilter.name())));
+
 
 		return queryFactory.selectFrom(project)
 				.where(builder)
 				.orderBy(project.createdAt.desc())
 				.fetch();
 	}
-
 }

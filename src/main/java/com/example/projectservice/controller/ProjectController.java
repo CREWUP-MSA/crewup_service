@@ -5,7 +5,9 @@ import java.util.List;
 import com.example.projectservice.config.swagger.AlreadyCompleteApiResponse;
 import com.example.projectservice.config.swagger.ForbiddenApiResponse;
 import com.example.projectservice.config.swagger.ProjectNotFoundApiResponse;
+import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.UpdateProjectRequest;
+import com.example.projectservice.entity.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,9 +63,10 @@ public class ProjectController {
 	@Operation(summary = "프로젝트 모집 목록 조회", description = "프로젝트 모집 목록을 조회합니다.")
 	public ResponseEntity<CustomApiResponse<List<ProjectResponse>>> getProjectsByFilter(
 		@RequestParam("filter") Filter filter,
+		@RequestParam("category") CategoryFilter categoryFilter,
 		@RequestParam(value = "position", required = false) Position position) {
 
-		return ResponseEntity.ok(CustomApiResponse.success(projectService.findProjectsByFilter(filter, position)));
+		return ResponseEntity.ok(CustomApiResponse.success(projectService.findProjectsByFilter(filter, position, categoryFilter)));
 	}
 
 	@GetMapping("/projects/my")
