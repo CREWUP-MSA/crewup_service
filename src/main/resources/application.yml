@@ -12,5 +12,10 @@ spring:
       ddl-auto: create
       
 springdoc:
-  swagger-ui:
-    path: /crewup-service/swagger-ui/index.html
+  api-docs:
+    version: openapi_3_1
+    enabled: true
+    path: /crewup-service/v3/api-docs
+  enable-spring-security: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
