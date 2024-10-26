@@ -14,10 +14,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@ApiResponse(responseCode = "400", description = "포지션을 선택해주세요.",
+@ApiResponse(responseCode = "400", description = "목록 조회시 입력값 오류",
 	content = @Content(
 		schema = @Schema(implementation = CustomApiResponse.class),
 		examples = {
+			@ExampleObject(
+				name = "검색어를 입력해주세요.",
+				value = """
+							{
+								"message": "검색어를 입력해주세요.",
+							}
+							"""
+			),
 			@ExampleObject(
 				name = "포지션을 선택해주세요.",
 				value = """
@@ -29,5 +37,5 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 		}
 	)
 )
-public @interface MustInputPositionApiResponse {
+public @interface MustInputApiResponse {
 }
