@@ -71,15 +71,28 @@ public class ProjectService {
 	 *               - RECRUITING: 모집 중인 프로젝트 조회
 	 *               - COMPLETED: 완료된 프로젝트 조회
 	 *               - NEED_POSITION: 필요한 포지션에 따라 프로젝트 조회
+	 *               - TITLE: 제목에 따라 프로젝트 조회
+	 *               - CONTENT: 내용에 따라 프로젝트 조회
+	 *               - TITLE_CONTENT: 제목 또는 내용에 따라 프로젝트 조회
 	 * @param position 포지션 (필터가 NEED_POSITION 인 경우 필수)
+	 * @param keyword 검색 키워드 (필터가 TITLE, CONTENT, TITLE_CONTENT 인 경우 필수)
+	 * @param categoryFilter 카테고리 필터
+	 *                - ALL: 전체 카테고리 조회
+	 *                - WEB: 웹
+	 *                - APP: 앱
+	 *                - GAME: 게임
+	 *                - AI: 인공지능
 	 * @return List<ProjectResponse>
 	 */
-	public List<ProjectResponse> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter) {
-		if (filter.equals(Filter.NEED_POSITION))
-			if (position == null)
-				throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+	public List<ProjectResponse> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter, String keyword) {
+		if (filter.equals(Filter.NEED_POSITION) && position == null)
+			throw new CustomException(ErrorCode.MUST_NEED_POSITION);
 
-		List<Project> projects = projectRepository.findProjectsByFilter(filter, position, categoryFilter);
+		if (filter.equals(Filter.TITLE) || filter.equals(Filter.CONTENT) || filter.equals(Filter.TITLE_CONTENT)
+			&& keyword == null)
+			throw new CustomException(ErrorCode.MUST_NEED_KEYWORD);
+
+		List<Project> projects = projectRepository.findProjectsByFilter(filter, position, categoryFilter, keyword);
 		return projects.stream()
 			.map(ProjectResponse::from)
 			.toList();

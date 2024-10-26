@@ -38,11 +38,12 @@ public class CustomProjectRepositoryImpl implements CustomProjectRepository {
 	/**
 	 * 프로젝트 필터링 조회
 	 * @param filter 필터
-	 * @param position 포지션
+	 * @param position 포지션 (needPositions 선택 시 - 필수)
+	 * @param keyword 검색 키워드 (title, content, title_content 선택 시 - 필수)
 	 * @param categoryFilter 카테고리 필터
-	 * @return List<Project>
+	 * @return List<Project> 프로젝트 목록
 	 */
-	public List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter) {
+	public List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter, String keyword) {
 		QProject project = QProject.project;
 		BooleanBuilder builder = new BooleanBuilder();
 
@@ -51,6 +52,16 @@ public class CustomProjectRepositoryImpl implements CustomProjectRepository {
 				case RECRUITING:
 				case COMPLETED:
 					builder.and(project.status.eq(Status.valueOf(filter.name())));
+					break;
+				case TITLE:
+					builder.and(project.title.containsIgnoreCase(keyword));
+					break;
+				case CONTENT:
+					builder.and(project.content.containsIgnoreCase(keyword));
+					break;
+				case TITLE_CONTENT:
+					builder.and(project.title.containsIgnoreCase(keyword))
+						.or(project.content.containsIgnoreCase(keyword));
 					break;
 				case NEED_POSITION:
 					builder.and(project.needPositions.contains(position));
