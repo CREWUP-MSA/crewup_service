@@ -15,8 +15,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +30,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@Table(indexes = {
+	@Index(name = "idx_project_status", columnList = "project_status"),
+	@Index(name = "idx_project_title", columnList = "project_title"),
+	@Index(name = "idx_project_content", columnList = "project_content"),
+	@Index(name = "idx_project_need_positions", columnList = "project_need_positions"),
+	@Index(name = "idx_project_categories", columnList = "project_categories"),
+	@Index(name = "idx_project_created_at", columnList = "created_at DESC")
+})
 public class Project extends BaseTimeEntity {
 
 	@Id

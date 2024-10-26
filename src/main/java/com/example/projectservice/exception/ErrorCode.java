@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    INVALID_INPUT_VALUE("잘못된 입력 값입니다.", 400),
+    MUST_NEED_POSITION("포지션을 선택해주세요.", 400),
+    MUST_NEED_KEYWORD("검색어를 입력해주세요.", 400),
 
     MEMBER_IS_DELETED("해당 회원은 탈퇴한 회원입니다.", 401),
     ALREADY_COMPLETED_PROJECT("이미 완료된 프로젝트입니다.", 401),

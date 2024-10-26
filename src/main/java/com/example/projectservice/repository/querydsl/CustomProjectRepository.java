@@ -9,5 +9,5 @@ import com.example.projectservice.entity.Project;
 
 public interface CustomProjectRepository {
 	List<Project> findMyProjects(Long memberId);
-	List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter);
+	List<Project> findProjectsByFilter(Filter filter, Position position, CategoryFilter categoryFilter, String keyword);
 }
