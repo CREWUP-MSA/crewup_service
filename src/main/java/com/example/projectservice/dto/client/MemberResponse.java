@@ -6,7 +6,6 @@ public record MemberResponse(
 	String name,
 	String role,
 	String password,
-	String provider,
-	boolean isDeleted
+	String provider
 ) {
 }

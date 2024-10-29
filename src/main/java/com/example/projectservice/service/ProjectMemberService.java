@@ -1,7 +1,11 @@
 package com.example.projectservice.service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,7 @@ public class ProjectMemberService {
 	private final ProjectMemberRepository projectMemberRepository;
 	private final ProfileRepository profileRepository;
 	private final MemberClientMapper memberClientMapper;
+	private final RedissonClient redissonClient;
 
 	/**
 	 * 프로젝트에 멤버 추가
@@ -158,9 +163,36 @@ public class ProjectMemberService {
 		ProjectMember projectMember = findProjectMember(projectId, memberId);
 
 		project.getMembers().remove(projectMember);
-		projectMemberRepository.delete(projectMember);
+
 		Profile profile = findProfileByMemberId(memberId);
 		return ProjectMemberResponse.from(projectMember, profile.getNickname());
+	}
+
+	/**
+	 * 멤버 탈퇴시 프로젝트 멤버 삭제
+	 * Redisson Lock 을 사용하여 멤버 삭제 동기화 처리
+	 * @param memberId 삭제할 멤버 ID
+	 */
+	@KafkaListener(topics = "member-delete", groupId = "crewup-service-project-member-group", containerFactory = "kafkaListenerContainerFactory")
+	@Transactional
+	public void deleteMemberOfProject(Long memberId) {
+		String lockKey = "member-delete-lock:" + memberId;
+		RLock lock = redissonClient.getLock(lockKey);
+
+		try {
+			if (lock.tryLock(10, 5, TimeUnit.SECONDS)) {
+				projectMemberRepository.deleteByMemberId(memberId);
+				log.info("project members deleted - reason: Member Deleted: {}", memberId);
+			} else {
+				log.error("Failed to acquire lock: {}", lockKey);
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			log.error("Interrupted while trying to acquire lock for memberId: {}", memberId, e);
+		} finally {
+			lock.unlock();
+		}
+
 	}
 
 	private Project findProjectById(Long projectId) {
