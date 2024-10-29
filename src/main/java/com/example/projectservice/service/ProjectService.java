@@ -1,14 +1,12 @@
 package com.example.projectservice.service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import com.example.projectservice.aop.RedissonLock;
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
 import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.UpdateProjectRequest;
 
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +33,6 @@ public class ProjectService {
 
 	private final ProjectRepository projectRepository;
 	private final MemberClientMapper memberClientMapper;
-	private final RedissonClient redissonClient;
 
 	/**
 	 * 프로젝트 생성
@@ -182,33 +179,19 @@ public class ProjectService {
 	 * @param memberId 삭제된 멤버 ID
 	 */
 	@KafkaListener(topics = "member-delete", groupId = "crewup-service-member-group", containerFactory = "kafkaListenerContainerFactory")
+	@RedissonLock(lockKey = "member-delete-lock:#memberId")
 	@Transactional
 	public void deleteProjectsByMemberId(Long memberId) {
-		String lockKey = "member-delete-lock:" + memberId;
-		RLock lock = redissonClient.getLock(lockKey);
+		List<Project> projects = projectRepository.findMyProjects(memberId);
 
-		try {
-			if (lock.tryLock(10, 5, TimeUnit.SECONDS)) {
-				List<Project> projects = projectRepository.findMyProjects(memberId);
+		if (projects.isEmpty())
+			return;
 
-				if (projects.isEmpty())
-					return;
-
-				for (Project project : projects) {
-					if (project.isLeader(memberId)) {
-						projectRepository.delete(project);
-						log.info("project deleted by leader - reason: Member Deleted: {}", memberId);
-					}
-				}
-			} else {
-				log.info("Failed to acquire lock: {}", lockKey);
+		for (Project project : projects) {
+			if (project.isLeader(memberId)) {
+				projectRepository.delete(project);
+				log.info("project deleted by leader - reason: Member Deleted: {}", memberId);
 			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-			log.error("Interrupted while trying to acquire lock for memberId: {}", memberId, e);
-		} finally {
-			if (lock.isHeldByCurrentThread())
-				lock.unlock();
 		}
 	}
 
