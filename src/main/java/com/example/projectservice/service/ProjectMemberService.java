@@ -2,9 +2,11 @@ package com.example.projectservice.service;
 
 import java.util.List;
 
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.projectservice.aop.RedissonLock;
 import com.example.projectservice.dto.client.MemberResponse;
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
 import com.example.projectservice.dto.request.AddMemberToProjectRequest;
@@ -158,9 +160,22 @@ public class ProjectMemberService {
 		ProjectMember projectMember = findProjectMember(projectId, memberId);
 
 		project.getMembers().remove(projectMember);
-		projectMemberRepository.delete(projectMember);
+
 		Profile profile = findProfileByMemberId(memberId);
 		return ProjectMemberResponse.from(projectMember, profile.getNickname());
+	}
+
+	/**
+	 * 멤버 탈퇴시 프로젝트 멤버 삭제
+	 * Redisson Lock 을 사용하여 멤버 삭제 동기화 처리
+	 * @param memberId 삭제할 멤버 ID
+	 */
+	@KafkaListener(topics = "member-delete", groupId = "crewup-service-project-member-group", containerFactory = "kafkaListenerContainerFactory")
+	@RedissonLock(lockKey = "member-delete-lock:#memberId")
+	@Transactional
+	public void deleteMemberOfProject(Long memberId) {
+		projectMemberRepository.deleteByMemberId(memberId);
+		log.info("project members deleted - reason: Member Deleted: {}", memberId);
 	}
 
 	private Project findProjectById(Long projectId) {

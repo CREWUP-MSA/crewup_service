@@ -27,22 +27,11 @@ public class MemberClientMapper {
     public MemberResponse getMemberById(Long id) {
         try{
             MemberResponse memberResponse = memberServiceClient.getMemberById(id).data();
-            validateMemberDeleted(memberResponse);
             return memberResponse;
 
         } catch (FeignException e){
             throw handleFeignException(e);
         }
-    }
-
-    /**
-     * 회원 삭제 여부 확인
-     * @param memberResponse 회원 정보
-     * @throws CustomException 회원이 삭제된 경우
-     */
-    private void validateMemberDeleted(MemberResponse memberResponse) {
-        if (memberResponse.isDeleted())
-            throw new CustomException(ErrorCode.MEMBER_IS_DELETED);
     }
 
     /**
