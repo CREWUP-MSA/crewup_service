@@ -7,6 +7,7 @@ import com.example.projectservice.entity.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateProjectRequest(
@@ -16,7 +17,7 @@ public record CreateProjectRequest(
 	@NotBlank(message = "프로젝트 내용을 입력해주세요.")
 	String content,
 
-	@NotBlank(message = "프로젝트 내 포지션을 입력해주세요.")
+	@NotNull(message = "프로젝트 내 포지션을 입력해주세요.")
 	Position myPosition,
 
 	@NotEmpty(message = "프로젝트에 필요한 포지션을 입력해주세요.")
