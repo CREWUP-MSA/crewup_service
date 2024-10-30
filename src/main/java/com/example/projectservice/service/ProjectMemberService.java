@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.projectservice.aop.RedissonLock;
+import com.example.projectservice.config.kafka.KafkaTopic;
 import com.example.projectservice.dto.client.MemberResponse;
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
 import com.example.projectservice.dto.request.AddMemberToProjectRequest;
@@ -47,7 +48,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
 	@Transactional
-	public ProjectMemberResponse createMemberToProject(Long projectId, Long memberId, AddMemberToProjectRequest request) {
+	public ProjectMemberResponse addMemberToProject(Long projectId, Long memberId, AddMemberToProjectRequest request) {
 		Project project = findProjectById(projectId);
 		MemberResponse memberResponse = memberClientMapper.getMemberById(memberId);
 
@@ -97,6 +98,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
 	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
+	@RedissonLock(lockKey = "project-member-lock:#projectId")
 	@Transactional
 	public ProjectMemberResponse updateMemberInProject(Long projectId, Long requesterId, Long memberId, UpdateMemberToProject request) {
 		Project project = findProjectById(projectId);
@@ -121,6 +123,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
 	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
+	@RedissonLock(lockKey = "project-member-lock:#projectId")
 	@Transactional
 	public ProjectMemberResponse updateLeaderOfProject(Long projectId, Long requesterId, Long memberId) {
 		Project project = findProjectById(projectId);
@@ -149,6 +152,7 @@ public class ProjectMemberService {
 	 * @throws CustomException (MEMBER_NOT_FOUND) 프로젝트 멤버를 찾을 수 없는 경우
 	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
 	 */
+	@RedissonLock(lockKey = "project-member-lock:#projectId")
 	@Transactional
 	public ProjectMemberResponse deleteMemberOfProject(Long projectId, Long requesterId, Long memberId) {
 		Project project = findProjectById(projectId);
@@ -170,8 +174,8 @@ public class ProjectMemberService {
 	 * Redisson Lock 을 사용하여 멤버 삭제 동기화 처리
 	 * @param memberId 삭제할 멤버 ID
 	 */
-	@KafkaListener(topics = "member-delete", groupId = "crewup-service-project-member-group", containerFactory = "kafkaListenerContainerFactory")
-	@RedissonLock(lockKey = "member-delete-lock:#memberId")
+	@KafkaListener(topics = KafkaTopic.MEMBER_DELETE, groupId = "crewup-service-project-member-group", containerFactory = "kafkaListenerContainerFactory")
+	@RedissonLock(lockKey = "project-member-lock:#memberId")
 	@Transactional
 	public void deleteMemberOfProject(Long memberId) {
 		projectMemberRepository.deleteByMemberId(memberId);

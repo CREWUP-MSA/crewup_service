@@ -3,6 +3,7 @@ package com.example.projectservice.service;
 import java.util.List;
 
 import com.example.projectservice.aop.RedissonLock;
+import com.example.projectservice.config.kafka.KafkaTopic;
 import com.example.projectservice.dto.client.mapper.MemberClientMapper;
 import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.UpdateProjectRequest;
@@ -122,6 +123,7 @@ public class ProjectService {
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
 	 */
+	@RedissonLock(lockKey = "project-lock:#projectId")
 	@Transactional
 	public ProjectResponse updateProject(Long projectId, Long memberId, UpdateProjectRequest request) {
 		Project project = projectRepository.findById(projectId)
@@ -143,6 +145,7 @@ public class ProjectService {
 	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
 	 * @throws CustomException (ALREADY_COMPLETED_PROJECT) 이미 완료된 프로젝트인 경우
 	 */
+	@RedissonLock(lockKey = "project-lock:#projectId")
 	@Transactional
 	public ProjectResponse completeProject(Long projectId, Long memberId) {
 		Project project = projectRepository.findById(projectId)
@@ -162,6 +165,7 @@ public class ProjectService {
 	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
 	 * @throws CustomException (FORBIDDEN) 리더가 아닌 경우
 	 */
+	@RedissonLock(lockKey = "project-lock:#projectId")
 	@Transactional
 	public ProjectResponse deleteProject(Long projectId, Long memberId) {
 		Project project = projectRepository.findById(projectId)
@@ -178,8 +182,8 @@ public class ProjectService {
 	 * Redisson Lock 을 사용하여 멤버 삭제 동기화 처리
 	 * @param memberId 삭제된 멤버 ID
 	 */
-	@KafkaListener(topics = "member-delete", groupId = "crewup-service-member-group", containerFactory = "kafkaListenerContainerFactory")
-	@RedissonLock(lockKey = "member-delete-lock:#memberId")
+	@KafkaListener(topics = KafkaTopic.MEMBER_DELETE, groupId = "crewup-service-project-group", containerFactory = "kafkaListenerContainerFactory")
+	@RedissonLock(lockKey = "project-lock:#memberId")
 	@Transactional
 	public void deleteProjectsByMemberId(Long memberId) {
 		List<Project> projects = projectRepository.findMyProjects(memberId);
