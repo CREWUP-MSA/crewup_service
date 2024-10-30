@@ -34,8 +34,6 @@ import lombok.NoArgsConstructor;
 	@Index(name = "idx_project_status", columnList = "project_status"),
 	@Index(name = "idx_project_title", columnList = "project_title"),
 	@Index(name = "idx_project_content", columnList = "project_content"),
-	@Index(name = "idx_project_need_positions", columnList = "project_need_positions"),
-	@Index(name = "idx_project_categories", columnList = "project_categories"),
 	@Index(name = "idx_project_created_at", columnList = "created_at DESC")
 })
 public class Project extends BaseTimeEntity {
