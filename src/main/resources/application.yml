@@ -10,7 +10,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-      
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 springdoc:
   api-docs:
     version: openapi_3_1

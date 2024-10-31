@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.projectservice.aop.RedissonLock;
+import com.example.projectservice.config.kafka.KafkaTopic;
 import com.example.projectservice.dto.request.UpdateProfileRequest;
 import com.example.projectservice.dto.response.ProfileResponse;
 import com.example.projectservice.entity.Profile;
@@ -29,9 +30,9 @@ public class ProfileService {
 	 *
 	 * nickname: "USER" + memberId ( 기본 닉네임 )
 	 */
-	@KafkaListener(topics = "member-create", groupId = "crewup-service-profile-group", containerFactory = "kafkaListenerContainerFactory")
+	@KafkaListener(topics = KafkaTopic.MEMBER_CREATED, groupId = "crewup-service-profile-group", containerFactory = "kafkaListenerContainerFactory")
 	@Transactional
-	public void CreateProfile(Long memberId){
+	public void createProfile(Long memberId){
 		Profile profile = Profile.builder()
 			.memberId(memberId)
 			.nickname("USER" + memberId)
@@ -39,7 +40,7 @@ public class ProfileService {
 			.build();
 
 		profileRepository.save(profile);
-		log.info("profile created: {}", profile);
+		log.info("profile created: {}", memberId);
 	}
 
 	/**
@@ -73,6 +74,7 @@ public class ProfileService {
 	 * @return ProfileResponse
 	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필이 존재하지 않을 경우
 	 */
+	@RedissonLock(lockKey = "profile-lock:#memberId")
 	@Transactional
 	public ProfileResponse updateProfile(UpdateProfileRequest request, Long memberId) {
 		Profile profile = findProfile(memberId);
@@ -86,8 +88,8 @@ public class ProfileService {
 	 * Redisson Lock 을 사용하여 멤버 삭제 동기화 처리
 	 * @param memberId 삭제할 멤버 ID
 	 */
-	@KafkaListener(topics = "member-delete", groupId = "crewup-service-profile-group", containerFactory = "kafkaListenerContainerFactory")
-	@RedissonLock(lockKey = "member-delete-lock:#memberId")
+	@KafkaListener(topics = KafkaTopic.MEMBER_DELETE, groupId = "crewup-service-profile-group", containerFactory = "kafkaListenerContainerFactory")
+	@RedissonLock(lockKey = "profile-lock:#memberId")
 	@Transactional
 	public void deleteProfile(Long memberId) {
 		Profile profile = findProfile(memberId);

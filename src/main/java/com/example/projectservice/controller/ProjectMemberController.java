@@ -51,7 +51,7 @@ public class ProjectMemberController {
 		@RequestBody @Valid AddMemberToProjectRequest request) {
 
 		return ResponseEntity.ok(
-			CustomApiResponse.success(projectMemberService.createMemberToProject(projectId, requesterId, request)));
+			CustomApiResponse.success(projectMemberService.addMemberToProject(projectId, requesterId, request)));
 	}
 
 	@GetMapping("/members")
