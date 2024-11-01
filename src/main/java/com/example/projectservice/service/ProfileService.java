@@ -8,7 +8,7 @@ import com.example.projectservice.aop.RedissonLock;
 import com.example.projectservice.config.kafka.KafkaTopic;
 import com.example.projectservice.dto.request.UpdateProfileRequest;
 import com.example.projectservice.dto.response.ProfileResponse;
-import com.example.projectservice.entity.Profile;
+import com.example.projectservice.entity.profile.Profile;
 import com.example.projectservice.exception.CustomException;
 import com.example.projectservice.exception.ErrorCode;
 import com.example.projectservice.repository.ProfileRepository;

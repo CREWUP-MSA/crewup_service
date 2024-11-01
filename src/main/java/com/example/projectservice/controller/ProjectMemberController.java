@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.projectservice.config.swagger.AlreadyLeaderApiResponse;
 import com.example.projectservice.config.swagger.CannotDeleteLeaderApiResponse;
 import com.example.projectservice.config.swagger.ForbiddenApiResponse;
-import com.example.projectservice.config.swagger.MemberAlreadyExistsApiResponse;
 import com.example.projectservice.config.swagger.MemberNotFoundApiResponse;
 import com.example.projectservice.config.swagger.ProfileNotFoundApiResponse;
 import com.example.projectservice.config.swagger.ProjectNotFoundApiResponse;
 import com.example.projectservice.dto.CustomApiResponse;
-import com.example.projectservice.dto.request.AddMemberToProjectRequest;
 import com.example.projectservice.dto.request.UpdateMemberToProject;
 import com.example.projectservice.dto.response.ProjectMemberResponse;
 import com.example.projectservice.service.ProjectMemberService;
@@ -39,20 +36,20 @@ public class ProjectMemberController {
 
 	private final ProjectMemberService projectMemberService;
 
-	@PostMapping("/member")
-	@Operation(summary = "프로젝트 멤버 추가", description = "프로젝트에 멤버를 추가합니다.")
-	@ProjectNotFoundApiResponse
-	@MemberNotFoundApiResponse
-	@ProfileNotFoundApiResponse
-	@MemberAlreadyExistsApiResponse
-	public ResponseEntity<CustomApiResponse<ProjectMemberResponse>> createMemberToProject(
-		@RequestHeader("X-Member-Id") Long requesterId,
-		@PathVariable Long projectId,
-		@RequestBody @Valid AddMemberToProjectRequest request) {
-
-		return ResponseEntity.ok(
-			CustomApiResponse.success(projectMemberService.addMemberToProject(projectId, requesterId, request)));
-	}
+	// @PostMapping("/member")
+	// @Operation(summary = "프로젝트 멤버 추가", description = "프로젝트에 멤버를 추가합니다.")
+	// @ProjectNotFoundApiResponse
+	// @MemberNotFoundApiResponse
+	// @ProfileNotFoundApiResponse
+	// @MemberAlreadyExistsApiResponse
+	// public ResponseEntity<CustomApiResponse<ProjectMemberResponse>> createMemberToProject(
+	// 	@RequestHeader("X-Member-Id") Long requesterId,
+	// 	@PathVariable Long projectId,
+	// 	@RequestBody @Valid AddMemberToProjectRequest request) {
+	//
+	// 	return ResponseEntity.ok(
+	// 		CustomApiResponse.success(projectMemberService.addMemberToProject(projectId, requesterId, request)));
+	// }
 
 	@GetMapping("/members")
 	@Operation(summary = "프로젝트 멤버 목록 조회", description = "프로젝트의 멤버 목록을 조회합니다.")

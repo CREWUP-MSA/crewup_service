@@ -1,7 +1,7 @@
 package com.example.projectservice.dto.request;
 
-import com.example.projectservice.entity.Category;
-import com.example.projectservice.entity.Position;
+import com.example.projectservice.entity.project.Category;
+import com.example.projectservice.entity.project.Position;
 
 import java.util.Set;
 

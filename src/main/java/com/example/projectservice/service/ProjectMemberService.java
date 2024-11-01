@@ -8,14 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.projectservice.aop.RedissonLock;
 import com.example.projectservice.config.kafka.KafkaTopic;
-import com.example.projectservice.dto.client.MemberResponse;
-import com.example.projectservice.dto.client.mapper.MemberClientMapper;
-import com.example.projectservice.dto.request.AddMemberToProjectRequest;
 import com.example.projectservice.dto.request.UpdateMemberToProject;
 import com.example.projectservice.dto.response.ProjectMemberResponse;
-import com.example.projectservice.entity.Profile;
-import com.example.projectservice.entity.Project;
-import com.example.projectservice.entity.ProjectMember;
+import com.example.projectservice.entity.profile.Profile;
+import com.example.projectservice.entity.project.Project;
+import com.example.projectservice.entity.project.ProjectMember;
 import com.example.projectservice.exception.CustomException;
 import com.example.projectservice.exception.ErrorCode;
 import com.example.projectservice.repository.ProfileRepository;
@@ -34,34 +31,7 @@ public class ProjectMemberService {
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
 	private final ProfileRepository profileRepository;
-	private final MemberClientMapper memberClientMapper;
 
-	/**
-	 * 프로젝트에 멤버 추가
-	 * @param projectId 추가할 프로젝트 ID
-	 * @param memberId 추가할 멤버 ID
-	 * @param request 프로젝트에 멤버 추가 요청 정보
-	 * @return ProjectMemberResponse
-	 * @throws CustomException (PROJECT_NOT_FOUND) 프로젝트를 찾을 수 없는 경우
-	 * @throws CustomException (MEMBER_ALREADY_EXISTS) 이미 프로젝트 멤버인 경우
-	 * @throws CustomException (MEMBER_NOT_FOUND) 멤버를 찾을 수 없는 경우
-	 * @throws CustomException (PROFILE_NOT_FOUND) 프로필을 찾을 수 없는 경우
-	 */
-	@Transactional
-	public ProjectMemberResponse addMemberToProject(Long projectId, Long memberId, AddMemberToProjectRequest request) {
-		Project project = findProjectById(projectId);
-		MemberResponse memberResponse = memberClientMapper.getMemberById(memberId);
-
-		if (projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId))
-			throw new CustomException(ErrorCode.MEMBER_ALREADY_EXISTS);
-
-		ProjectMember projectMember = request.toEntity(project, memberResponse);
-		project.addMember(projectMember);
-
-		projectMemberRepository.save(projectMember);
-		Profile profile = findProfileByMemberId(memberId);
-		return ProjectMemberResponse.from(projectMember, profile.getNickname());
-	}
 
 	/**
 	 * 프로젝트 멤버 목록 조회 (프로젝트 멤버만 조회 가능)
