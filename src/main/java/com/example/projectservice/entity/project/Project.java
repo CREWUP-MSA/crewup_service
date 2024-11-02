@@ -1,8 +1,9 @@
-package com.example.projectservice.entity;
+package com.example.projectservice.entity.project;
 
 import java.util.*;
 
 import com.example.projectservice.dto.request.UpdateProjectRequest;
+import com.example.projectservice.entity.BaseTimeEntity;
 import com.example.projectservice.exception.CustomException;
 import com.example.projectservice.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
@@ -71,6 +72,10 @@ public class Project extends BaseTimeEntity {
 	@Builder.Default
 	private List<ProjectMember> members = new ArrayList<>();
 
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private List<ProjectRecruit> recruits = new ArrayList<>();
+
 	/**
 	 * 프로젝트 멤버 추가
 	 * @param member 추가할 프로젝트 멤버
@@ -78,6 +83,15 @@ public class Project extends BaseTimeEntity {
 	public void addMember(ProjectMember member) {
 		this.members.add(member);
 		member.setProject(this);
+	}
+
+	/**
+	 * 프로젝트 지원자 추가
+	 * @param recruit 추가할 프로젝트 지원자
+	 */
+	public void addRecruit(ProjectRecruit recruit) {
+		this.recruits.add(recruit);
+		recruit.setProject(this);
 	}
 
 	/**

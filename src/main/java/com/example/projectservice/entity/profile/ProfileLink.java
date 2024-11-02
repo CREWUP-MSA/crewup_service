@@ -1,4 +1,6 @@
-package com.example.projectservice.entity;
+package com.example.projectservice.entity.profile;
+
+import com.example.projectservice.entity.BaseTimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

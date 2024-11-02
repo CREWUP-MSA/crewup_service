@@ -1,9 +1,7 @@
 package com.example.projectservice.dto.response;
 
-import java.util.List;
-
-import com.example.projectservice.entity.LinkType;
-import com.example.projectservice.entity.ProfileLink;
+import com.example.projectservice.entity.profile.LinkType;
+import com.example.projectservice.entity.profile.ProfileLink;
 
 import lombok.Builder;
 

@@ -25,7 +25,7 @@ import com.example.projectservice.dto.CustomApiResponse;
 import com.example.projectservice.dto.request.CreateProjectRequest;
 import com.example.projectservice.dto.request.Filter;
 import com.example.projectservice.dto.response.ProjectResponse;
-import com.example.projectservice.entity.Position;
+import com.example.projectservice.entity.project.Position;
 import com.example.projectservice.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;

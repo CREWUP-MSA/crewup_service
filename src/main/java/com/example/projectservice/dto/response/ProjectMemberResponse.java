@@ -1,8 +1,8 @@
 package com.example.projectservice.dto.response;
 
-import com.example.projectservice.entity.Position;
-import com.example.projectservice.entity.ProjectMember;
-import com.example.projectservice.entity.Role;
+import com.example.projectservice.entity.project.Position;
+import com.example.projectservice.entity.project.ProjectMember;
+import com.example.projectservice.entity.project.Role;
 
 import lombok.Builder;
 

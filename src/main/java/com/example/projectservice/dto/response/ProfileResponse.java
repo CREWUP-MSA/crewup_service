@@ -2,7 +2,7 @@ package com.example.projectservice.dto.response;
 
 import java.util.List;
 
-import com.example.projectservice.entity.Profile;
+import com.example.projectservice.entity.profile.Profile;
 
 import lombok.Builder;
 

@@ -1,6 +1,7 @@
-package com.example.projectservice.entity;
+package com.example.projectservice.entity.project;
 
 import com.example.projectservice.dto.request.UpdateMemberToProject;
+import com.example.projectservice.entity.BaseTimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +31,7 @@ public class ProjectMember extends BaseTimeEntity {
 	@Column(name = "project_member_id")
 	private Long id;
 
-	@Column(name = "member_id", nullable = false, unique = true)
+	@Column(name = "member_id", nullable = false)
 	private Long memberId;
 
 	@Column(name = "role", nullable = false)
@@ -44,7 +45,16 @@ public class ProjectMember extends BaseTimeEntity {
 	@JoinColumn(name = "project_id")
 	private Project project;
 
-	//-- 연관관계 편의 메서드 --//
+    public static ProjectMember from(ProjectRecruit projectRecruit) {
+		return ProjectMember.builder()
+				.memberId(projectRecruit.getMemberId())
+				.position(projectRecruit.getPosition())
+				.project(projectRecruit.getProject())
+				.role(Role.MEMBER)
+				.build();
+    }
+
+    //-- 연관관계 편의 메서드 --//
 	public void setProject(Project project) {
 		this.project = project;
 	}

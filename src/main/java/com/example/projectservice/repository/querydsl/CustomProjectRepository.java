@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.Filter;
-import com.example.projectservice.entity.Position;
-import com.example.projectservice.entity.Project;
+import com.example.projectservice.entity.project.Position;
+import com.example.projectservice.entity.project.Project;
 
 public interface CustomProjectRepository {
 	List<Project> findMyProjects(Long memberId);

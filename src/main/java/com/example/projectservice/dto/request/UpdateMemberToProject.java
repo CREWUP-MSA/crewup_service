@@ -1,6 +1,6 @@
 package com.example.projectservice.dto.request;
 
-import com.example.projectservice.entity.Position;
+import com.example.projectservice.entity.project.Position;
 
 import jakarta.validation.constraints.NotBlank;
 

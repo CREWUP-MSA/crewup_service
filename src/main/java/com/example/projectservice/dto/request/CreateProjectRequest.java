@@ -3,7 +3,12 @@ package com.example.projectservice.dto.request;
 import java.util.Set;
 
 import com.example.projectservice.dto.client.MemberResponse;
-import com.example.projectservice.entity.*;
+import com.example.projectservice.entity.project.Category;
+import com.example.projectservice.entity.project.Position;
+import com.example.projectservice.entity.project.Project;
+import com.example.projectservice.entity.project.ProjectMember;
+import com.example.projectservice.entity.project.Role;
+import com.example.projectservice.entity.project.Status;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

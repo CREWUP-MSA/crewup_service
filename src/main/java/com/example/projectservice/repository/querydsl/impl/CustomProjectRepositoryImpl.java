@@ -4,7 +4,12 @@ import java.util.List;
 
 import com.example.projectservice.dto.request.CategoryFilter;
 import com.example.projectservice.dto.request.Filter;
-import com.example.projectservice.entity.*;
+import com.example.projectservice.entity.project.Category;
+import com.example.projectservice.entity.project.Position;
+import com.example.projectservice.entity.project.Project;
+import com.example.projectservice.entity.project.QProject;
+import com.example.projectservice.entity.project.QProjectMember;
+import com.example.projectservice.entity.project.Status;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.stereotype.Repository;
 

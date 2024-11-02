@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.projectservice.entity.ProjectMember;
+import com.example.projectservice.entity.project.ProjectMember;
 
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long> {
 	Optional<ProjectMember> findByProjectIdAndMemberId(Long projectId, Long memberId);

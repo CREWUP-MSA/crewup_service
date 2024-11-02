@@ -1,9 +1,9 @@
 package com.example.projectservice.dto.response;
 
-import com.example.projectservice.entity.Category;
-import com.example.projectservice.entity.Position;
-import com.example.projectservice.entity.Project;
-import com.example.projectservice.entity.Status;
+import com.example.projectservice.entity.project.Category;
+import com.example.projectservice.entity.project.Position;
+import com.example.projectservice.entity.project.Project;
+import com.example.projectservice.entity.project.Status;
 
 import lombok.Builder;
 
