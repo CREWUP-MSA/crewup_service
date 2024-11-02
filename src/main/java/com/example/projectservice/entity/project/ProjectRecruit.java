@@ -51,4 +51,18 @@ public class ProjectRecruit extends BaseTimeEntity {
 	public void setProject(Project project) {
 		this.project = project;
 	}
+
+	/**
+	 * 프로젝트 지원 상태 변경 (수락)
+	 */
+    public void accept() {
+		this.status = RecruitStatus.ACCEPTED;
+    }
+
+	/**
+	 * 프로젝트 지원 상태 변경 (거절)
+	 */
+	public void reject() {
+		this.status = RecruitStatus.REJECTED;
+	}
 }
