@@ -21,18 +21,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "검색어를 입력해주세요.",
 				value = """
-							{
-								"message": "검색어를 입력해주세요.",
-							}
-							"""
+						{
+							"message": "검색어를 입력해주세요.",
+						}
+						"""
 			),
 			@ExampleObject(
 				name = "포지션을 선택해주세요.",
 				value = """
-							{
-								"message": "포지션을 선택해주세요.",
-							}
-							"""
+						{
+							"message": "포지션을 선택해주세요.",
+						}
+						"""
 			)
 		}
 	)

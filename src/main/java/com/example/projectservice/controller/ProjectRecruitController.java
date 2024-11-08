@@ -36,6 +36,8 @@ public class ProjectRecruitController {
 	@Operation(summary = "프로젝트 모집 지원", description = "프로젝트에 모집에 지원합니다.")
 	@ApiResponse(responseCode = "200", description = "프로젝트 모집 지원 성공")
 	@AlreadyCompleteApiResponse
+	@AlreadyMemberApiResponse
+	@AlreadyRecruitApiResponse
 	public ResponseEntity<CustomApiResponse<ProjectRecruitResponse>> recruitToProject(
 		@PathVariable Long projectId,
 		@RequestHeader("X-Member-Id") Long requesterId,

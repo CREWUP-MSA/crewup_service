@@ -21,10 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "프로젝트가 존재하지 않음",
 				value = """
-							{
-								"message": "해당 프로젝트를 찾을 수 없습니다.",
-							}
-							"""
+						{
+							"message": "해당 프로젝트를 찾을 수 없습니다.",
+						}
+						"""
 			)
 		}
 	)

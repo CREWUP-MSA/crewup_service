@@ -21,10 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "이미 리더인 회원입니다.",
 				value = """
-							{
-								"message": "이미 리더인 회원입니다.",
-							}
-							"""
+						{
+							"message": "이미 리더인 회원입니다.",
+						}
+						"""
 			)
 		}
 	)

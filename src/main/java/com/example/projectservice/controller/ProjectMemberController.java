@@ -36,21 +36,6 @@ public class ProjectMemberController {
 
 	private final ProjectMemberService projectMemberService;
 
-	// @PostMapping("/member")
-	// @Operation(summary = "프로젝트 멤버 추가", description = "프로젝트에 멤버를 추가합니다.")
-	// @ProjectNotFoundApiResponse
-	// @MemberNotFoundApiResponse
-	// @ProfileNotFoundApiResponse
-	// @MemberAlreadyExistsApiResponse
-	// public ResponseEntity<CustomApiResponse<ProjectMemberResponse>> createMemberToProject(
-	// 	@RequestHeader("X-Member-Id") Long requesterId,
-	// 	@PathVariable Long projectId,
-	// 	@RequestBody @Valid AddMemberToProjectRequest request) {
-	//
-	// 	return ResponseEntity.ok(
-	// 		CustomApiResponse.success(projectMemberService.addMemberToProject(projectId, requesterId, request)));
-	// }
-
 	@GetMapping("/members")
 	@Operation(summary = "프로젝트 멤버 목록 조회", description = "프로젝트의 멤버 목록을 조회합니다.")
 	@ProfileNotFoundApiResponse

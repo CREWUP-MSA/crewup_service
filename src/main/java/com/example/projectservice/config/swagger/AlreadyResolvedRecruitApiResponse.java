@@ -14,19 +14,19 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @ApiResponse(responseCode = "401", description = "이미 처리된 지원요청입니다.",
-        content = @Content(
-                schema = @Schema(implementation = CustomApiResponse.class),
-                examples = {
-                        @ExampleObject(
-                                name = "이미 처리된 지원요청입니다.",
-                                value = """
-							{
-								"message": "이미 처리된 지원요청입니다.",
-							}
-							"""
-                        )
-                }
-        )
+	content = @Content(
+		schema = @Schema(implementation = CustomApiResponse.class),
+		examples = {
+			@ExampleObject(
+				name = "이미 처리된 지원요청입니다.",
+				value = """
+						{
+							"message": "이미 처리된 지원요청입니다.",
+						}
+						"""
+			)
+		}
+	)
 )
 public @interface AlreadyResolvedRecruitApiResponse {
 }
