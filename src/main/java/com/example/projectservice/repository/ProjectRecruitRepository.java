@@ -16,5 +16,5 @@ public interface ProjectRecruitRepository extends JpaRepository<ProjectRecruit, 
 
 	List<ProjectRecruit> findByProjectId(Long projectId);
 
-	boolean existsByProjectAndMemberId(Long projectId, Long memberId);
+	boolean existsByProjectIdAndMemberId(Long projectId, Long memberId);
 }

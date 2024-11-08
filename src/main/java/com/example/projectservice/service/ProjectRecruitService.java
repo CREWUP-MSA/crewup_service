@@ -185,7 +185,7 @@ public class ProjectRecruitService {
 	private void validateAddRecruit(Long requesterId, Project project) {
 		if (project.getStatus().equals(Status.COMPLETED))
 			throw new CustomException(ErrorCode.ALREADY_COMPLETED_PROJECT);
-		if (projectRecruitRepository.existsByProjectAndMemberId(project.getId(), requesterId))
+		if (projectRecruitRepository.existsByProjectIdAndMemberId(project.getId(), requesterId))
 			throw new CustomException(ErrorCode.ALREADY_RECRUITED);
 		if (projectMemberRepository.existsByProjectIdAndMemberId(project.getId(), requesterId))
 			throw new CustomException(ErrorCode.ALREADY_MEMBER);
