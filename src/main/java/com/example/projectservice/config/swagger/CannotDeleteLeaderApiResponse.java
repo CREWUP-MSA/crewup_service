@@ -21,10 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "리더는 삭제할 수 없습니다. 프로젝트를 삭제해주세요",
 				value = """
-							{
-								"message": "리더는 삭제할 수 없습니다. 프로젝트를 삭제해주세요",
-							}
-							"""
+						{
+							"message": "리더는 삭제할 수 없습니다. 프로젝트를 삭제해주세요",
+						}
+						"""
 			)
 		}
 	)

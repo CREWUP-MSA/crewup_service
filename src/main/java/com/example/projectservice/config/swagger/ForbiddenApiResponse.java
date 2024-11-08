@@ -21,10 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "권한이 없습니다.",
 				value = """
-							{
-								"message": "권한이 없습니다.",
-							}
-							"""
+						{
+							"message": "권한이 없습니다.",
+						}
+						"""
 			)
 		}
 	)

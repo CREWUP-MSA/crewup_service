@@ -14,20 +14,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@ApiResponse(responseCode = "404", description = "회원이 존재하지 않음",
+@ApiResponse(responseCode = "401", description = "이미 프로젝트 멤버입니다.",
 	content = @Content(
 		schema = @Schema(implementation = CustomApiResponse.class),
 		examples = {
 			@ExampleObject(
-				name = "회원이 존재하지 않음",
+				name = "이미 프로젝트 멤버입니다.",
 				value = """
 						{
-							"message": "해당 회원을 찾을 수 없습니다.",
+							"message": "이미 리더인 회원입니다.",
 						}
 						"""
 			)
 		}
 	)
 )
-public @interface MemberNotFoundApiResponse {
+public @interface AlreadyMemberApiResponse {
 }

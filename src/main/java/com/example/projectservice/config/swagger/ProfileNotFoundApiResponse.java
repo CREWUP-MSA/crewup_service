@@ -21,11 +21,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 			@ExampleObject(
 				name = "프로필이 존재하지 않음",
 				value = """
-							{
-								"message": "프로필이 존재하지 않습니다.",
-								"data": null
-							}
-							"""
+						{
+							"message": "프로필이 존재하지 않습니다.",
+							"data": null
+						}
+						"""
 			)
 		}
 	)

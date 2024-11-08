@@ -45,8 +45,7 @@ public class ProjectRecruitService {
 		MemberResponse memberResponse = memberClientMapper.getMemberById(requesterId);
 		Project project = findProjectById(projectId);
 
-		if (project.getStatus().equals(Status.COMPLETED))
-			throw new CustomException(ErrorCode.ALREADY_COMPLETED_PROJECT);
+		validateAddRecruit(requesterId, project);
 
 		ProjectRecruit projectRecruit = request.toEntity(project, memberResponse);
 		project.addRecruit(projectRecruit);
@@ -57,6 +56,8 @@ public class ProjectRecruitService {
 		log.info("recruit added: {}", projectRecruit.getId());
 		return ProjectRecruitResponse.from(projectRecruit, profile.getNickname());
 	}
+
+
 
 	/**
 	 * 내 지원 목록 조회
@@ -179,5 +180,14 @@ public class ProjectRecruitService {
 
 		if (!projectRecruit.getStatus().equals(RecruitStatus.PENDING))
 			throw new CustomException(ErrorCode.ALREADY_RESOLVED_RECRUIT);
+	}
+
+	private void validateAddRecruit(Long requesterId, Project project) {
+		if (project.getStatus().equals(Status.COMPLETED))
+			throw new CustomException(ErrorCode.ALREADY_COMPLETED_PROJECT);
+		if (projectRecruitRepository.existsByProjectAndMemberId(project.getId(), requesterId))
+			throw new CustomException(ErrorCode.ALREADY_RECRUITED);
+		if (projectMemberRepository.existsByProjectIdAndMemberId(project.getId(), requesterId))
+			throw new CustomException(ErrorCode.ALREADY_MEMBER);
 	}
 }
